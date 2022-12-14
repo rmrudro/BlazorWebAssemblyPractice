@@ -1,0 +1,81 @@
+﻿@page "/team/{Id:int}"
+
+<h3 style="color:blue">TeamComponent</h3>
+
+<p>
+    Name : @team.Name
+</p>
+<p>
+    Region : @team.Region
+</p>
+<br />
+<p> 
+    MemBer Information 
+
+</p>
+<ul>
+    @foreach(var member in this.members)
+    {
+        <li>@member.Name</li>
+        <li>@member.TeamId</li>
+        <li>@member.Age</li>
+    }
+</ul>
+
+@code {
+    [CascadingParameter]
+    public string Color { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private Team team;
+
+    private IEnumerable<Member> members;
+
+
+    protected override void OnInitialized()
+    {
+
+
+        base.OnInitialized();
+
+        var teams = new List<Team>();
+        teams.Add(new Team { Id = 1, Name = "Green", Region = "Region1" });
+        teams.Add(new Team { Id = 2, Name = "Red", Region = "Region2" });
+        teams.Add(new Team { Id = 3, Name = "White", Region = "Region3" });
+        teams.Add(new Team { Id = 4, Name = "Yellow", Region = "Region4" });
+
+        var allmembers = new List<Member>();
+        allmembers.Add(new Member { Id = 1, Name = "Jhon", Age = 20, TeamId = 1 });
+        allmembers.Add(new Member { Id = 2, Name = "Khan", Age = 25, TeamId = 1 });
+        allmembers.Add(new Member { Id = 3, Name = "Mike", Age = 19, TeamId = 2 });
+        allmembers.Add(new Member { Id = 4, Name = "Ross", Age = 25, TeamId = 2 });
+        allmembers.Add(new Member { Id = 5, Name = "Ryan", Age = 29, TeamId = 3 });
+        allmembers.Add(new Member { Id = 6, Name = "Fox", Age = 22, TeamId = 3 });
+
+        team = teams.FirstOrDefault(x => x.Id == this.Id);
+        members = allmembers.Where(x => x.TeamId == this.Id);
+
+    }
+    public class Team
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Region { get; set; }
+    }
+    public class Member
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public int TeamId { get; set; }
+
+    }
+
+}
